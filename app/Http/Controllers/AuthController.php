@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UsersWithExtraAccess;
 use http\Env\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use MarcinOrlowski\ResponseBuilder\ResponseBuilder as RB;
 
@@ -19,7 +19,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'test']]);
     }
 
     private function getLoginData($validated) {
@@ -63,8 +63,7 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $credentials = request(['email', 'password']);
-
+        $credentials = request(['login', 'password']);
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
@@ -120,7 +119,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function test(Request $request) {
+    public function test() {
         return response()->json(['message' => 'Successfully logged out']);
     }
 
